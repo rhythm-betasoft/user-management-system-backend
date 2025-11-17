@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import allUsersRoutes from './routes/allUsersRoutes'
 import spendRoutes from "./routes/spendRoutes"
 import announcementRoutes from './routes/announcementsRoutes'
+import reactionRoutes from './routes/ReactionRoutes'
 import commentRoutes from './routes/commentRoutes'
 import "reflect-metadata"
 import { AppDataSource } from "./dataSource"
@@ -34,7 +35,7 @@ app.use(allUsersRoutes)
 app.use("/users", spendRoutes);
 app.use(announcementRoutes)
 app.use(commentRoutes)
-
+app.use(reactionRoutes)
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
