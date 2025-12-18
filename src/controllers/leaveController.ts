@@ -26,17 +26,13 @@ export class LeaveController {
       if (!token) {
         return res.json({ message: "Bearer token missing" });
       }
- 
-      const secret: string | undefined = process.env.ACCESS_SECRET;
- 
+      const secret: string = process.env.ACCESS_SECRET!;
       if (!secret) {
         return res.json({ message: "Secret key is undefined" });
       }
- 
       const decoded: any = jwt.verify(token, secret);
       const userid = decoded.id;
       const user = await userRepo.findOneBy({ id: userid });
- 
       if (user) {
         const acceptedLeave = await leaveRepo.findOne({
          where: { user: { id: user.id }, status: 1 },
@@ -64,7 +60,7 @@ export class LeaveController {
           endDate: endDate || startDate,
           leaveDurationType: leaveDurationType,
           reason: reason,
-          pendingLeaves: 12,
+          pendingLeaves: 10,
           user,
         });
         if (newLeave) {
@@ -72,6 +68,8 @@ export class LeaveController {
         }
     }
     } 
-    catch (error) { console.error("Error applying leave:", error); return res.status(500).json({ status: false, message: "Error applying leave" }); }
+    catch (error) { 
+       return res.status(500).json({ status: false, message: "Error applying leave" });
+       }
   }
 }
