@@ -1,14 +1,14 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class Reactions1763116408625 implements MigrationInterface {
-    name = 'Reactions1763116408625'
+export class Create1764849512409 implements MigrationInterface {
+    name = 'Create1764849512409'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`CREATE TABLE \`spends\` (\`id\` int NOT NULL AUTO_INCREMENT, \`salary\` decimal(10,2) NOT NULL, \`expenses\` decimal(10,2) NOT NULL, \`saving\` decimal(10,2) NOT NULL, \`user_id\` int NOT NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`comments\` (\`id\` int NOT NULL AUTO_INCREMENT, \`content\` varchar(255) NOT NULL, \`createdAt\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`authorId\` int NULL, \`announcementId\` int NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`reaction\` (\`id\` int NOT NULL AUTO_INCREMENT, \`type\` varchar(32) NOT NULL, \`userId\` int NULL, \`announcementId\` int NULL, UNIQUE INDEX \`IDX_163c1af1ae33bd15ef6a9ad943\` (\`userId\`, \`announcementId\`, \`type\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
-        await queryRunner.query(`ALTER TABLE \`users\` CHANGE \`blood_group\` \`blood_group\` varchar(255) NOT NULL`);
-        await queryRunner.query(`ALTER TABLE \`users\` CHANGE \`religion\` \`religion\` varchar(255) NOT NULL`);
-        await queryRunner.query(`ALTER TABLE \`users\` CHANGE \`age\` \`age\` int NOT NULL`);
-        await queryRunner.query(`ALTER TABLE \`users\` CHANGE \`role\` \`role\` varchar(255) NOT NULL`);
+        await queryRunner.query(`CREATE TABLE \`announcements\` (\`id\` int NOT NULL AUTO_INCREMENT, \`title\` varchar(255) NOT NULL, \`content\` text NOT NULL, \`createdAt\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`authorId\` int NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`users\` (\`id\` int NOT NULL AUTO_INCREMENT, \`name\` varchar(255) NOT NULL, \`email\` varchar(255) NOT NULL, \`password\` varchar(255) NOT NULL, \`gender\` varchar(255) NOT NULL, \`blood_group\` varchar(255) NOT NULL, \`religion\` varchar(255) NOT NULL, \`age\` int NOT NULL, \`role\` varchar(255) NOT NULL, \`pinned\` tinyint NOT NULL DEFAULT 0, \`twoFactorSecret\` varchar(255) NULL, \`flag\` tinyint NOT NULL DEFAULT 0, \`trustedDevices\` json NULL, PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
         await queryRunner.query(`ALTER TABLE \`spends\` ADD CONSTRAINT \`FK_6518db631ca878f98cc354603fc\` FOREIGN KEY (\`user_id\`) REFERENCES \`users\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`comments\` ADD CONSTRAINT \`FK_4548cc4a409b8651ec75f70e280\` FOREIGN KEY (\`authorId\`) REFERENCES \`users\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE \`comments\` ADD CONSTRAINT \`FK_2bf4aa41d384038daf10e39a8e8\` FOREIGN KEY (\`announcementId\`) REFERENCES \`announcements\`(\`id\`) ON DELETE CASCADE ON UPDATE NO ACTION`);
@@ -24,12 +24,12 @@ export class Reactions1763116408625 implements MigrationInterface {
         await queryRunner.query(`ALTER TABLE \`comments\` DROP FOREIGN KEY \`FK_2bf4aa41d384038daf10e39a8e8\``);
         await queryRunner.query(`ALTER TABLE \`comments\` DROP FOREIGN KEY \`FK_4548cc4a409b8651ec75f70e280\``);
         await queryRunner.query(`ALTER TABLE \`spends\` DROP FOREIGN KEY \`FK_6518db631ca878f98cc354603fc\``);
-        await queryRunner.query(`ALTER TABLE \`users\` CHANGE \`role\` \`role\` varchar(255) NOT NULL DEFAULT 'user'`);
-        await queryRunner.query(`ALTER TABLE \`users\` CHANGE \`age\` \`age\` int NULL`);
-        await queryRunner.query(`ALTER TABLE \`users\` CHANGE \`religion\` \`religion\` varchar(255) NULL`);
-        await queryRunner.query(`ALTER TABLE \`users\` CHANGE \`blood_group\` \`blood_group\` varchar(255) NULL DEFAULT 'unknown'`);
+        await queryRunner.query(`DROP TABLE \`users\``);
+        await queryRunner.query(`DROP TABLE \`announcements\``);
         await queryRunner.query(`DROP INDEX \`IDX_163c1af1ae33bd15ef6a9ad943\` ON \`reaction\``);
         await queryRunner.query(`DROP TABLE \`reaction\``);
+        await queryRunner.query(`DROP TABLE \`comments\``);
+        await queryRunner.query(`DROP TABLE \`spends\``);
     }
 
 }

@@ -8,6 +8,8 @@ import spendRoutes from "./routes/spendRoutes"
 import announcementRoutes from './routes/announcementsRoutes'
 import reactionRoutes from './routes/ReactionRoutes'
 import commentRoutes from './routes/commentRoutes'
+import dashboardRoutes from './routes/dashboardRoutes'
+import leave from './routes/leave'
 import "reflect-metadata"
 import { AppDataSource } from "./dataSource"
 AppDataSource.initialize()
@@ -26,16 +28,18 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin:  ['http://localhost:5173', 'http://localhost:5174'],
   credentials: true,
 }))
 
-app.use("/users", userRoutes);
-app.use(allUsersRoutes)
+app.use("/user", userRoutes);
+app.use("/user",allUsersRoutes)
 app.use("/users", spendRoutes);
-app.use(announcementRoutes)
+app.use("/announcements",announcementRoutes)
 app.use(commentRoutes)
 app.use(reactionRoutes)
+app.use("/dashboard",dashboardRoutes)
+app.use('/leaves',leave)
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

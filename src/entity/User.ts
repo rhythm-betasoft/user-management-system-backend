@@ -3,6 +3,7 @@ import { Spend } from './Spend';
 import { Announcement } from './Announcement';
 import { Comment } from './Comment';   
 import { Reaction } from "./Reaction";
+import { LeaveDetails } from "./leaveDetails";
 @Entity("users")
 export class User {
   @PrimaryGeneratedColumn()
@@ -58,4 +59,8 @@ export class User {
   comments!: Comment[];
   @OneToMany(() => Reaction, (reaction) => reaction.user)
 reactions!: Reaction[];
+
+@OneToMany(() => LeaveDetails, (leaveDetails) => leaveDetails.user)
+leaves!: LeaveDetails[];
+
 }

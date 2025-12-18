@@ -9,28 +9,48 @@ const userRepository = AppDataSource.getRepository(User);
 const announcementRepository = AppDataSource.getRepository(Announcement);
 
 export class CommentController {
-  async createComment(req: Request, res: Response) {
-    const { content, userId, announcementId } = req.body;
+ async createComment(req: Request, res: Response) {
+  const { content, userId, announcementId } = req.body;
 
-    const user = await userRepository.findOneBy({ id: userId });
-    const announcement = await announcementRepository.findOneBy({ id: announcementId });
+  const user = await userRepository.findOneBy({ id: userId });
+  const announcement = await announcementRepository.findOneBy({ id: announcementId });
 
-    if (!user || !announcement) {
-      return res.status(404).json("User or Announcement not found");
+  if (!user || !announcement) {
+    return res.status(404).json({ message: "User or Announcement not found" });
+  }
+
+  const comment = commentRepository.create({ content, author: user, announcement });
+  await commentRepository.save(comment);
+
+  return res.status(201).json({
+    message: "Comment created successfully",
+    comment: {
+      id: comment.id,
+      content: comment.content,
+      author: { id: user.id, name: user.name },
+      announcementId: announcement.id,
+      createdAt: comment.createdAt
     }
+  });
+}
 
-    const comment = commentRepository.create({ content, author: user, announcement });
-    await commentRepository.save(comment);
+async getComments(req: Request, res: Response) {
+  const { announcementId } = req.params;
+  const comments = await commentRepository.find({
+    where: { announcement: { id: Number(announcementId) } },
+    relations: ["author"],
+  });
+  const formatted = comments.map(c => ({
+    id: c.id,
+    content: c.content,
+    createdAt: c.createdAt,
+    author: {
+      id: c.author.id,
+      name: c.author.name
+    }
+  }));
 
-    return res.status(201).json(comment);
-  }
+  return res.json(formatted);
+}
 
-  async getComments(req: Request, res: Response) {
-    const { announcementId } = req.params;
-    const comments = await commentRepository.find({
-      where: { announcement: { id: Number(announcementId) } },
-      relations: ["author"],
-    });
-    return res.json(comments);
-  }
 }
