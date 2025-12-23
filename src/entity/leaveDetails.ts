@@ -36,6 +36,8 @@ export class LeaveDetails {
 
   @Column({ type: "int", default: 0 })
   status!: number;
+  @Column({ nullable: true })
+   rejectionReason!: string;
 
   @ManyToOne(() => User, (user) => user.leaves, { onDelete: "CASCADE" })
   @JoinColumn({ name: "user_id" })

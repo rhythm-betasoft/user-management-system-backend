@@ -75,6 +75,7 @@ class UserController {
 
     try {
       const user = await userRepository.findOneBy({ email });
+      console.log("userrrrrr",user)
       if (!user) return res.status(404).json({ message: "User not found" });
       
       const valid = await bcrypt.compare(password, user.password);
@@ -85,8 +86,8 @@ class UserController {
           (d: any) => d.deviceId === userAgent && new Date() < new Date(d.expiresAt)
         );
         if (isTrusted) {
-          const accesstoken = jwt.sign({ id: user.id, email: user.email, role: user.role }, ACCESS_SECRET, { expiresIn: ACCESS_EXP } as SignOptions);
-          const refreshtoken = jwt.sign({ id: user.id, email: user.email, role: user.role }, REFRESH_SECRET, { expiresIn: REFRESH_EXP } as SignOptions);
+          const accesstoken = jwt.sign({ id: user.id, email: user.email, role: user.role },  ACCESS_SECRET, { expiresIn: ACCESS_EXP } as SignOptions);
+          const refreshtoken = jwt.sign({ id: user.id, email: user.email, role: user.role },  REFRESH_SECRET, { expiresIn: REFRESH_EXP } as SignOptions);
 
           const { password: _, twoFactorSecret: __, ...userSafe } = user;
           return res.status(200).json({ message: "Login successful (trusted device)", accesstoken, refreshtoken, user: userSafe });
@@ -94,11 +95,13 @@ class UserController {
         if (!user.twoFactorSecret) return res.status(400).json({ message: "2FA is not enabled" });
         return res.status(200).json({ message: "2FA verification required", user: { id: user.id, email: user.email } });
       }
+      console.log("asasasas",user)
 
       const accesstoken = jwt.sign({ id: user.id, email: user.email, role: user.role }, ACCESS_SECRET, { expiresIn: ACCESS_EXP } as SignOptions);
       const refreshtoken = jwt.sign({ id: user.id, email: user.email, role: user.role }, REFRESH_SECRET, { expiresIn: REFRESH_EXP } as SignOptions);
 
       const { password: _, twoFactorSecret: __, ...userSafe } = user;
+      console.log(userSafe)
       return res.status(200).json({ message: "Login successful", accesstoken, refreshtoken, user: userSafe });
     } catch (err) {
       return res.status(500).json({ message: "Server error" });
