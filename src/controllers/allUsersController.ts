@@ -144,6 +144,24 @@ async getReligionCounts(req: Request, res: Response) {
     return res.status(500).json({ message: "Error fetching religion counts", error: err });
   }
 }
+async  assignRole(req: Request, res: Response) {
+  try {
+const {userid,role}=req.body;
+if(!userid||!role){
+  return res.status(400).json({message:"userid and role are required"})
+}
+    const user = await userRepository.findOne({ where:{ id: Number(userid)} });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    user.role = role;
+    await userRepository.save(user);
+    return res.status(200).json({ user });
+  } catch (err) {
+    console.error("Error updating role:", err);
+    return res.status(500).json({ message: "Unable to change user's role" });
+  }
+}
 }
 export default AllUsersController;
 
