@@ -33,6 +33,9 @@ export class User {
   @Column({ name: "role" })
   role!: string;
 
+  @Column({ type: "json", default: null })
+  permissions!: number[];
+
   @Column({ default: false })
   pinned!: boolean;
 
