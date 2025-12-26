@@ -14,9 +14,10 @@ import commentRoutes from "./routes/commentRoutes";
 import dashboardRoutes from "./routes/dashboardRoutes";
 import leave from "./routes/leave";
 import permissionRoutes from './routes/permissionRoutes'
+import attendanceRoutes from './routes/attendanceRoutes'
+import mailroutes from './routes/mailRoutes'
 import "reflect-metadata";
 import { AppDataSource } from "./dataSource";
-
 AppDataSource.initialize()
   .then(() => {
     console.log("Data Source has been initialized!");
@@ -46,6 +47,8 @@ app.use(reactionRoutes)
 app.use("/dashboard",dashboardRoutes)
 app.use('/leaves',leave)
 app.use('/permission',permissionRoutes)
+app.use('/attendance',attendanceRoutes)
+app.use('/mail',mailroutes)
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
