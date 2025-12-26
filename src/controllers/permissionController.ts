@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { AppDataSource } from "../dataSource";
-import { Permissions } from "../entity/UserPermission";
+import { Permissions } from "../entity/userPermission";
 import {User} from '../entity/User'
 const permissionRepository = AppDataSource.getRepository(Permissions);
 const userRepository=AppDataSource.getRepository(User)

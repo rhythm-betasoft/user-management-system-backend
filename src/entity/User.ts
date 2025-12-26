@@ -4,6 +4,7 @@ import { Announcement } from './Announcement';
 import { Comment } from './Comment';   
 import { Reaction } from "./Reaction";
 import { LeaveDetails } from "./leaveDetails";
+import {Attendance} from './attendance'
 @Entity("users")
 export class User {
   @PrimaryGeneratedColumn()
@@ -65,5 +66,8 @@ reactions!: Reaction[];
 
 @OneToMany(() => LeaveDetails, (leaveDetails) => leaveDetails.user)
 leaves!: LeaveDetails[];
+
+ @OneToMany(() => Attendance, (attendance) => attendance.user)
+  attendance!: Attendance[];
 
 }
