@@ -75,6 +75,7 @@ export class AttendanceController {
     if (!attendance) {
       attendance = attendanceRepository.create({ user, month, year, data: {} });
     }
+    attendance.data = attendance.data ?? {};
     attendance.data[date] = status;
     await attendanceRepository.save(attendance);
     res.json({
@@ -100,10 +101,10 @@ export class AttendanceController {
       });
 
       if (!attendance) {
-        return res.status(404).json({ message: "Attendance record not found"});
+        return res.status(404).json({ message: "Attendance record not found" });
       }
       let parsedData: any[] = [];
-      if (typeof attendance.data === "string") { 
+      if (typeof attendance.data === "string") {
         parsedData = JSON.parse(attendance.data);
       } else if (Array.isArray(attendance.data)) {
         parsedData = attendance.data;
@@ -118,7 +119,12 @@ export class AttendanceController {
       }
       const events = parsedData.map((item) => ({
         start: item.date,
-        color:item.status==="present"?"green":item.status==="halfday"?"yellow":"red",
+        color:
+          item.status === "present"
+            ? "green"
+            : item.status === "halfday"
+              ? "yellow"
+              : "red",
       }));
       res.json({
         message: "Attendance retrieved successfully",

@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config();   // ✅ MUST be first
+dotenv.config();
 
 import express from "express";
 import cors from "cors";
@@ -13,19 +13,21 @@ import reactionRoutes from "./routes/ReactionRoutes";
 import commentRoutes from "./routes/commentRoutes";
 import dashboardRoutes from "./routes/dashboardRoutes";
 import leave from "./routes/leave";
-import permissionRoutes from './routes/permissionRoutes'
-import attendanceRoutes from './routes/attendanceRoutes'
-import mailroutes from './routes/mailRoutes'
+import permissionRoutes from "./routes/permissionRoutes";
+import attendanceRoutes from "./routes/attendanceRoutes";
+import mailroutes from "./routes/mailRoutes";
+import planRoutes from "./routes/planRoutes";
+import { Plans } from "./seeders/planSeeder";
 import "reflect-metadata";
 import { AppDataSource } from "./dataSource";
 AppDataSource.initialize()
-  .then(() => {
+  .then(async () => {
     console.log("Data Source has been initialized!");
+    await Plans();
   })
   .catch((err) => {
     console.error("Error during Data Source initialization:", err);
   });
-
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -33,23 +35,25 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(cookieParser());
 
-app.use(cors({
-  origin:  ['http://localhost:5173', 'http://localhost:5174'],
-  credentials: true,
-}))
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://localhost:5174"],
+    credentials: true,
+  })
+);
 
 app.use("/user", userRoutes);
-app.use("/user",allUsersRoutes)
+app.use("/user", allUsersRoutes);
 app.use("/users", spendRoutes);
-app.use("/announcements",announcementRoutes)
-app.use(commentRoutes)
-app.use(reactionRoutes)
-app.use("/dashboard",dashboardRoutes)
-app.use('/leaves',leave)
-app.use('/permission',permissionRoutes)
-app.use('/attendance',attendanceRoutes)
-app.use('/mail',mailroutes)
+app.use("/announcements", announcementRoutes);
+app.use(commentRoutes);
+app.use(reactionRoutes);
+app.use("/dashboard", dashboardRoutes);
+app.use("/leaves", leave);
+app.use("/permission", permissionRoutes);
+app.use("/attendance", attendanceRoutes);
+app.use("/mail", mailroutes);
+app.use("/plans", planRoutes);
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-  

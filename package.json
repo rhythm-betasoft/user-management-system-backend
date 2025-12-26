@@ -53,6 +53,7 @@
     "nodemailer": "^7.0.10",
     "qrcode": "^1.5.4",
     "reflect-metadata": "^0.2.2",
+    "seeder": "^0.2.4",
     "typeorm": "^0.3.27"
   }
 }
